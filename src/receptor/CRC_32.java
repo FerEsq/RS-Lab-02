@@ -2,7 +2,7 @@
 receptor/CRC-32.py
 
 
-Laboratorio 02 - Redes de Computadores
+Laboratorio 02 - Redes de Computadoras
 Autores:
     - Melissa Pérez 21385
     - Fernanda Esquivel 21542
@@ -33,7 +33,7 @@ public class CRC_32 {
         Scanner scanner = new Scanner(System.in);
 
         // Solicitar el mensaje completo
-        System.out.print("Ingrese recibido en binario: ");
+        System.out.print("Ingrese el mensaje recibido en binario: ");
         String receivedMessage = scanner.nextLine();
 
         // Asumiendo que los últimos 32 bits son el CRC
@@ -49,9 +49,9 @@ public class CRC_32 {
 
         // Comparar los CRC
         if (receivedChecksumBinary.equals(recalculatedCRCBinary)) {
-            System.out.println("No se detectaron errores. Mensaje: " + originalMessage);
+            System.out.println("\nNo se detectaron errores. Mensaje original: " + originalMessage);
         } else {
-            System.out.println("Se detectaron errores.");
+            System.out.println("\nSe detectaron errores. Se descarta el mensaje.");
         }
 
         scanner.close();
