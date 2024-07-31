@@ -16,7 +16,7 @@ public class receptor {
     public static void main(String[] args) {
         int port = 8080;
         try (ServerSocket serverSocket = new ServerSocket(port)) {
-            System.out.println("Servidor escuchando en puerto: " + port);
+            System.out.println("Receptor escuchando en puerto: " + port);
 
             while (true) {
                 try (Socket clientSocket = serverSocket.accept();
@@ -24,18 +24,26 @@ public class receptor {
                     String receivedMessage = in.readLine();
 
                     // Imprimir el mensaje recibido
-                    System.out.println("Mensaje recibido del emisor: " + receivedMessage);
+                    System.out.println("\n>> Mensaje recibido del emisor: " + receivedMessage);
 
-                    // Decodificación y corrección de errores
-                    String correctedMessage = Hamming.findAndCorrectErrors(receivedMessage);
+                    if (receivedMessage.length() > 32) {
+                        // Procesar como mensaje CRC-32
+                        boolean isValid = CRC_32.verifyCRC(receivedMessage);
 
-                    // Verificación del CRC
-                    boolean isValid = CRC_32.verifyCRC(correctedMessage);
-
-                    if (isValid) {
-                        System.out.println("Mensaje recibido correctamente: " + correctedMessage);
+                        if (isValid) {
+                            System.out.println("(✓) Mensaje recibido correctamente con CRC-32: " + receivedMessage.substring(0, receivedMessage.length() - 32));
+                        } else {
+                            System.out.println("(✘) Se detectaron errores. Se descarta el mensaje.");
+                        }
                     } else {
-                        System.out.println("Error en la verificación CRC. Mensaje corrupto.");
+                        // Procesar como mensaje Hamming
+                        String correctedMessage = Hamming.findAndCorrectErrors(receivedMessage);
+
+                        if (correctedMessage == null) {
+                            System.out.println("(✘) Error en la corrección de errores Hamming. Mensaje no válido.");
+                        } else {
+                            System.out.println("(✓) Mensaje recibido correctamente con Hamming: " + correctedMessage);
+                        }
                     }
                 } catch (IOException e) {
                     System.out.println("Error al recibir el mensaje: " + e.getMessage());

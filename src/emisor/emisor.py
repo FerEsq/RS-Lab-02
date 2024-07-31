@@ -18,10 +18,7 @@ def prepare_message():
     Application Layer:
     Requests a binary message after choosing the algorithm to check integrity.
     """
-    print("\nSeleccione el algoritmo de integridad: \n(1) Hamming \n(2) CRC-32\n-----------------")
-    choice = input()
-    
-    # Solicitar el mensaje después de seleccionar el algoritmo
+    choice = input("\nSeleccione el algoritmo de integridad: \n1. Hamming \n2. CRC-32\n>> ")
     message = requestBinaryMessage()
 
     if choice == '1':
@@ -49,9 +46,12 @@ def calculate_integrity(message):
     Data Link Layer:
     Calculates the integrity information using CRC-32 and concatenates it to the message.
     """
-    crc_value = crc32(message.encode())
+    padded_message = message + '0' * ((8 - len(message) % 8) % 8)
+    binary_message = int(padded_message, 2).to_bytes((len(padded_message) + 7) // 8, byteorder='big')
+    crc_value = crc32(binary_message)
     crc_binary = hex_to_binary(f"{crc_value:08x}")
-    return message + crc_binary
+    final_message = padded_message + crc_binary
+    return final_message
 
 def apply_noise(message, probability):
     """
@@ -74,12 +74,13 @@ def send_message(message, host, port, noise_probability):
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         s.connect((host, port))
         noisy_message = apply_noise(message, noise_probability)
+        #print(f"Mensaje enviado: {noisy_message}")
         s.sendall(noisy_message.encode())
 
-# Use the functions
+# Excecution
 host = '127.0.0.1'
 port = 8080
-noise_probability = 0.01  # Probability of error per bit
+noise_probability = 0.01 # percentage of noise
 
 binary_message = prepare_message()  # Request and prepare message
 send_message(binary_message, host, port, noise_probability)  # Send message
