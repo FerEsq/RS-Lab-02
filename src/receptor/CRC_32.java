@@ -1,5 +1,5 @@
 /*
-receptor/CRC-32.py
+receptor/CRC-32.java
 
 
 Laboratorio 02 - Redes de Computadoras
@@ -13,6 +13,17 @@ import java.util.zip.CRC32;
 import java.util.Arrays;
 
 public class CRC_32 {
+    // Método para verificar el CRC del mensaje recibido
+    public static boolean verifyCRC(String messageWithCRC) {
+        String originalMessage = messageWithCRC.substring(0, messageWithCRC.length() - 32);
+        String receivedChecksumBinary = messageWithCRC.substring(messageWithCRC.length() - 32);
+
+        long recalculatedCRC = calculateCRC32(originalMessage);
+        String recalculatedCRCBinary = Long.toBinaryString(recalculatedCRC);
+        recalculatedCRCBinary = String.format("%32s", recalculatedCRCBinary).replace(' ', '0');
+
+        return receivedChecksumBinary.equals(recalculatedCRCBinary);
+    }
 
     // Método para calcular el CRC-32 de un mensaje binario
     public static long calculateCRC32(String binaryMessage) {

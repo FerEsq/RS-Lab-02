@@ -11,7 +11,7 @@ Autores:
 def requestBinaryMessage():
     # Solicitar al usuario que ingrese un mensaje binario
     while True:
-        message = input("\033[37mIngrese el mensaje en binario: \033[37m")
+        message = input("\n\033[37mIngrese el mensaje en binario: \033[37m")
         if all(c in '01' for c in message):
             return message
         else:
@@ -43,10 +43,7 @@ def calculateEvenParityBits(bits, m):
     data.reverse()
     return ''.join(map(str, data))
 
-def hammingCodeAlgorithm():
-    #Solicitar el mensaje binario
-    message = requestBinaryMessage()
-    
+def hammingCodeAlgorithm(message):
     #Longitud del mensaje
     k = len(message)
     
@@ -64,6 +61,8 @@ def hammingCodeAlgorithm():
     
     return encodedMessage
 
+"""
 #Ejecutar el código de Hamming
 hammingCode = hammingCodeAlgorithm()
 print(f"\033[37m\n* El código de Hamming con paridad par es: \033[37m\033[32m{hammingCode}\033[0m")
+"""

@@ -18,7 +18,7 @@ def requestBinaryMessage():
     """
     # Solicitar al usuario que ingrese un mensaje binario
     while True:
-        message = input("\033[37mIngrese el mensaje en binario: \033[37m")
+        message = input("\n\033[37mIngrese el mensaje en binario: \033[37m")
         if all(c in '01' for c in message):
             return message
         else:
@@ -83,6 +83,8 @@ def crc32Algorithm():
     
     return output_message, checksum_binary
 
+"""
 # Ejecutar el algoritmo CRC-32
 encoded_message, checksum_binary = crc32Algorithm()
 print(f"\033[37m\n* El mensaje con el CRC-32 (binario) es: \033[32m{encoded_message}\033[0m")
+"""
