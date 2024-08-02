@@ -18,8 +18,12 @@ def prepare_message():
     Application Layer:
     Requests a binary message after choosing the algorithm to check integrity.
     """
-    choice = input("\nSeleccione el algoritmo de integridad: \n1. Hamming \n2. CRC-32\n>> ")
-    message = requestBinaryMessage()
+    choice = input("\nSeleccione el algoritmo de integridad: \n1. Hamming \n2. CRC-32\n3. Salir\n>> ")
+    if choice == '3':
+        print("Saliendo del programa.")
+        exit()
+    else:
+        message = requestBinaryMessage()
 
     if choice == '1':
         # Hamming
@@ -80,7 +84,13 @@ def send_message(message, host, port, noise_probability):
 # Excecution
 host = '127.0.0.1'
 port = 8080
-noise_probability = 0.01 # percentage of noise
+noise_probability = 0.10 # percentage of noise
 
-binary_message = prepare_message()  # Request and prepare message
-send_message(binary_message, host, port, noise_probability)  # Send message
+flag = True
+
+while flag:
+    binary_message = prepare_message()  # Request and prepare message
+    send_message(binary_message, host, port, noise_probability)  # Send message
+
+
+
