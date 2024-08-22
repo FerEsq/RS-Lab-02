@@ -8,8 +8,6 @@ Autores:
     - Fernanda Esquivel 21542
 """
 
-import binascii
-
 def requestBinaryMessage():
     """
     Request the user to input a binary message.
@@ -23,7 +21,7 @@ def requestBinaryMessage():
             return message
         else:
             print("\033[31mERROR: Mensaje no válido.\n\033[31m")
-            
+
 def crc32(message):
     """
     Calculate the CRC-32 checksum of a given message.
@@ -37,9 +35,22 @@ def crc32(message):
     if isinstance(message, str):
         message = message.encode('utf-8')
     
-    # Calculate CRC-32 using the binascii module
-    crc_value = binascii.crc32(message) & 0xffffffff
-    return crc_value
+    # Starts calculating CRC
+    crc = 0xFFFFFFFF
+    # Polinomio generador para CRC-32
+    polynomial = 0x04C11DB7
+
+    # Procesar cada byte del mensaje
+    for byte in message:
+        crc ^= byte << 24                           # XOR con los bits más altos
+        for _ in range(8):                          # Procesar cada uno de los 8 bits
+            if crc & 0x80000000:                    # Si el bit más alto es 1
+                crc = (crc << 1) ^ polynomial
+            else:
+                crc <<= 1
+        crc &= 0xFFFFFFFF                           # Asegurar que el CRC sea de 32 bits
+
+    return crc ^ 0xFFFFFFFF                         # Invertir todos los bits del CRC
 
 def hex_to_binary(hex_string):
     """
